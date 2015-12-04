@@ -1,0 +1,10 @@
+{
+	"install": [
+		{			
+			"txt": "Install on ",
+			"src": ".",
+			"dir": "c:\\PHP5",
+			"exclude": ["copycoder.json", "nbproject", "README.md"]
+		}		
+	]	
+}
