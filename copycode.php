@@ -196,7 +196,7 @@ class Copycode
     public static function fix($str)
     {
         //
-        return strlen($str) > 60 ? '...'.substr($str,-60) : $str;
+        return strlen($str) > 61 ? '...'.substr($str,-61) : $str;
     }
 }
 
