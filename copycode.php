@@ -8,13 +8,14 @@ class Copycode
 {
     /**
      *
+     * 
      */
     public static function cli($argv)
     {
         //
         echo
         "\n".
-        "  Copycoder v0.0.1\n".
+        "  Copycoder v0.0.2\n".
         "  by Francesco Bianco <bianco@javanile.org>\n".
         "\n";
 
@@ -31,7 +32,7 @@ class Copycode
         $tag = isset($argv[1]) ? $argv[1] : 'default';
         
         //
-        echo "  (!) load: '{$file}'\n";
+        echo "  (!) load: '{$file}'\n\n";
 
         //
         $rules = json_decode(file_get_contents($file), true);
@@ -45,6 +46,12 @@ class Copycode
 
         //
         foreach($rules[$tag] as $rule) {
+
+            //
+            if (isset($rule['txt']) && $rule['txt']) {
+                echo "  ".$rule['txt']."\n";
+                echo "  ".str_repeat('-',strlen($rule['txt']))."\n";
+            }
 
             //
             $src = realpath($rule['src']);
@@ -65,7 +72,10 @@ class Copycode
             }
 
             //
-            echo "  (!) dest: {$dir}\n";
+            echo "  (!) from: '".static::fix($src)."'\n";
+
+            //
+            echo "        to: '".static::fix($dir)."'\n";
 
             //
             $exclude = array();
@@ -94,6 +104,9 @@ class Copycode
             else {
 
             }
+
+            //
+            echo "\n";
         }
     }
 
@@ -103,7 +116,7 @@ class Copycode
     public static function copyFolder($src, $dir, $rel, $exlcude)
     {
         // destionation folder to copy file
-        $dirDest = realpath($dir.'/'.$rel);
+        $dirDest = $dir.'/'.$rel;
         
         // create current destination folder to copy file
         if (!is_dir($dirDest)) {
@@ -147,7 +160,7 @@ class Copycode
                 if (!file_exists($dirFile)) {
 
                     //
-                    echo "  (!) copy: '{$relFile}'\n";
+                    echo "      copy: '{$relFile}'\n";
 
                     //
                     copy($srcFile, $dirFile);
@@ -165,7 +178,7 @@ class Copycode
                     if ($srcTime > $dirTime) {
 
                         //
-                        echo "  (!) copy: '{$relFile}'\n";
+                        echo "      copy: '{$relFile}'\n";
 
                         //
                         copy($srcFile, $dirFile);
@@ -173,6 +186,17 @@ class Copycode
                 }
             }            
         }
+    }
+
+    /**
+     *
+     * @param type $str
+     * @return type
+     */
+    public static function fix($str)
+    {
+        //
+        return strlen($str) > 60 ? '...'.substr($str,-60) : $str;
     }
 }
 
