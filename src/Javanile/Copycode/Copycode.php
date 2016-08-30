@@ -4,6 +4,10 @@
  * 
  */
 
+//
+namespace Javanile\Copycode;
+
+//
 class Copycode
 {
     /**
@@ -12,6 +16,8 @@ class Copycode
      */
     public static function cli($argv)
     {
+        var_dump($argv);
+
         //
         echo
         "\n".
