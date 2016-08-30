@@ -12,21 +12,47 @@ class Copycode
 {
     /**
      *
+     * @var type 
+     */
+    private $file = './copycode.json';
+    
+    /**
+     * 
      * 
      */
-    public static function cli($argv)
+    private $json = array();
+    
+    /**
+     *
+     * 
+     */
+    public function cli($argv)
     {
-        var_dump($argv);
-
+        //
+        if (!isset($argv[1])) { $this->syntaxError(); }
+        
+        //
+        switch ($argv[1])
+        {
+            //
+            case 'create': 
+                if (!isset($argv[2])) { $this->syntaxError(); }       
+                $this->create($argv[2]); 
+                break;
+            
+            //
+            default: $this->syntaxError(); 
+        }
+        
         //
         echo
         "\n".
-        "  Copycoder v0.0.2\n".
+        "  Copycoder v0.0.6\n".
         "  by Francesco Bianco <bianco@javanile.org>\n".
         "\n";
 
-        //
-        $file = "copycode.json";
+        
+        
 
         //
         if (!file_exists($file)) {
@@ -115,7 +141,8 @@ class Copycode
             echo "\n";
         }
     }
-
+    
+    
     /**
      * 
      */
@@ -202,10 +229,16 @@ class Copycode
     public static function fix($str)
     {
         //
-        return strlen($str) > 61 ? '...'.substr($str,-61) : $str;
+        return strlen($str) > 61 ? '...'.substr($str, -61) : $str;
+    }
+    
+    /**
+     * 
+     * 
+     */
+    private function syntaxError()
+    {
+        echo "  Syntax error.";
+        exit();
     }
 }
-
-//
-Copycode::cli($argv);
-
