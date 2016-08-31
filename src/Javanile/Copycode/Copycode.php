@@ -314,8 +314,7 @@ class Copycode
         echo
         "\n".
         "  Syntax error.\n".
-        "  Type: copycode --help".
-        "\n\n";
+        "  Type: copycode --help\n";
     }
     
     /**
@@ -327,7 +326,6 @@ class Copycode
         //
         echo
         "\n".
-        "  (?) {$msg}\n".
-        "\n";
+        "  (?) {$msg}\n";
     }
 }
