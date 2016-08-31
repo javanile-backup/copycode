@@ -194,7 +194,7 @@ class Copycode
 
         //
         $this->copyDir($from, $to, "", $exclude);
-       
+        
         //
         echo "\n";
     }
@@ -265,7 +265,7 @@ class Copycode
         if (!file_exists($to_file_rel)) 
         {
             //
-            echo "    copy: {$file_rel}\n";
+            echo "    copy: ".$this->fixstr($file_rel)."\n";
 
             //
             copy($from_file_rel, $to_file_rel);
@@ -284,7 +284,7 @@ class Copycode
             if ($srcTime > $dirTime) 
             {
                 //
-                echo "    copy: {$file_rel}\n";
+                echo "    copy: ".$this->fixstr($file_rel)."\n";
 
                 //
                 copy($from_file_rel, $to_file_rel);
