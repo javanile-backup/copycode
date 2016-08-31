@@ -29,204 +29,276 @@ class Copycode
     public function cli($argv)
     {
         //
-        if (!isset($argv[1])) { $this->syntaxError(); }
+        if (!isset($argv[1])) { $this->syntaxError(); exit(); }
         
         //
-        switch ($argv[1])
+        $taskname = $argv[1];
+        
+        //
+        switch ($taskname)
         {
             //
-            case 'create': 
-                if (!isset($argv[2])) { $this->syntaxError(); }       
-                $this->create($argv[2]); 
-                break;
+            case '--version': 
+                echo
+                "\n".
+                "  Copycoder v0.0.6\n".
+                "  by Francesco Bianco <bianco@javanile.org>\n".
+                "\n";
+                return;
+                
+            //
+            case '--help':
+                echo
+                "\n".
+                "  Copycode usage:\n\n".
+                "  |\n".
+                "  |  copycode <task-name>       run copy task by <task-name>\n".
+                "  |                             defined into copycode.json file\n".
+                "  |                             placed in current path.\n".
+                "  |\n".
+                "  |  copycode --list            show the list of tasks.\n".
+                "  |\n".
+                "  |  copycode --help            show the this manuals.\n".
+                "  |\n".
+                "  |  copycode --version         show credits and version.\n".
+                "  |\n\n";
+                return;
+        }
+        
+        //
+        if (!$this->file_exists()) 
+        {
+            $this->error('copycode.json file not found.'); exit();
+        }
             
-            //
-            default: $this->syntaxError(); 
+        //
+        $this->file_decode();
+
+        //
+        if (!isset($this->json[$taskname])) 
+        { 
+            $this->error("task '".$taskname."' not found in copycode.json."); exit();   
+        }
+        
+        // single task
+        if (isset($this->json[$taskname]['from']) 
+        && isset($this->json[$taskname]['to'])) 
+        {
+            $this->runTask($this->json[$taskname]);
+        }
+        
+        // grouped task
+        else if (is_array($this->json[$taskname]) 
+        && count($this->json[$taskname]) > 0)
+        {
+            foreach($this->json[$taskname] as $task) 
+            {
+                $this->runTask($task);
+            }
         }
         
         //
-        echo
-        "\n".
-        "  Copycoder v0.0.6\n".
-        "  by Francesco Bianco <bianco@javanile.org>\n".
-        "\n";
-
-        
-        
-
-        //
-        if (!file_exists($file)) {
-            echo "  (?) stop: no '{$file}' found\n";
-            exit();
-        }
-
-        //
-        $tag = isset($argv[1]) ? $argv[1] : 'default';
-        
-        //
-        echo "  (!) load: '{$file}'\n\n";
-
-        //
-        $rules = json_decode(file_get_contents($file), true);
-
-        //
-        if (!isset($rules[$tag])) {
-            echo "  (?) stop: no 'default' tag on '{$file}'\n";
-            echo "  (!) tags: ".implode(", ",array_keys($rules))."\n";
-            exit();
-        }
-
-        //
-        foreach($rules[$tag] as $rule) {
-
-            //
-            if (isset($rule['txt']) && $rule['txt']) {
-                echo "  ".$rule['txt']."\n";
-                echo "  ".str_repeat('-',strlen($rule['txt']))."\n";
-            }
-
-            //
-            $src = realpath($rule['src']);
-
-            //
-            if (!$src) {
-                echo "  (?) skip: no real path for '".$rule['src']."'\n";
-                continue;
-            }
-
-            //
-            $dir = realpath($rule['dir']);
-
-            //
-            if (!$dir) {
-                echo "  (?) skip: no real path for '".$rule['dir']."'\n";
-                continue;
-            }
-
-            //
-            echo "  (!) from: '".static::fix($src)."'\n";
-
-            //
-            echo "        to: '".static::fix($dir)."'\n";
-
-            //
-            $exclude = array();
-
-            //
-            if (isset($rule['exclude']) && is_array($rule['exclude'])) {
-                foreach($rule['exclude'] as $path) {
-                    $exclude[] = realpath($src.'/'.$path);
-                }
-            }
-
-            //
-            //echo "{$src} {$dest}\n";
-
-            //
-            if (is_file($src)) {
-
-            }
-
-            //
-            else if (is_dir($src)) {
-                 static::copyFolder($src, $dir, "", $exclude);
-            }
-
-            //
-            else {
-
-            }
-
-            //
-            echo "\n";
-        }
+        echo "  (!) Task complete.\n\n";
     }
-    
     
     /**
      * 
+     * 
+     * 
      */
-    public static function copyFolder($src, $dir, $rel, $exlcude)
+    private function file_exists() 
     {
-        // destionation folder to copy file
-        $dirDest = $dir.'/'.$rel;
-        
-        // create current destination folder to copy file
-        if (!is_dir($dirDest)) {
-            mkdir($dirDest);
+        //
+        return file_exists($this->file);
+    }
+    
+    /**
+     * 
+     * 
+     */ 
+    private function file_decode()
+    {
+        //
+        $this->json = json_decode(file_get_contents($this->file), true);
+    }
+    
+    /**
+     * 
+     * 
+     * 
+     */
+    private function runTask($task)
+    {
+        //
+        if (isset($task['name']) && $task['name']) 
+        {
+            echo 
+            "\n".
+            "  ".$task['name']."\n".
+            "  ".str_repeat('-', strlen($task['name']))."\n";
+        }
+
+        //
+        if (isset($task['description']) && $task['description'])
+        {
+            echo "  ".$task['description']."\n";         
+        }   
+
+        //
+        $from = realpath($task['from']);
+
+        //
+        if (!$from) 
+        {
+            $this->error("Error: no real path: ".$task['from']); return;    
+        }
+
+        //
+        if (!is_dir($from))
+        {
+            $this->error("Error: not is a directory: ".$task['from']); return;    
         }
         
         //
-        $files = scandir($src.'/'.$rel);
+        $to = realpath($task['to']);
 
         //
-        foreach($files as $file) {
+        if (!$to)
+        {
+            $this->error("Error: no real path: ".$task['to']); return;
+        }
+        
+        //
+        if (!is_dir($to))
+        {
+            $this->error("Error: not is a directory: ".$task['to']); return;    
+        }
 
-            //
-            if (in_array($file, array('.', '..'))) {
-                continue;
+        //
+        echo 
+        "\n".
+        "  - from: ".$this->fixstr($from)."\n".
+        "  -   to: ".$this->fixstr($to)."\n\n";
+
+        //
+        $exclude = array($to);
+
+        //
+        if (isset($task['exclude']) && is_array($task['exclude'])) 
+        {
+            foreach($task['exclude'] as $path)
+            {
+                $exclude[] = realpath($from.'/'.$path);
             }
+        }
+
+        //
+        $this->copyDir($from, $to, "", $exclude);
+       
+        //
+        echo "\n";
+    }
+
+    /**
+     * 
+     * 
+     */
+    private function copyDir($from, $to, $rel, $exlcude)
+    {
+        // destionation folder to copy file
+        $to_rel = $to.'/'.$rel;
+        
+        // create current destination folder to copy file
+        if (!is_dir($to_rel)) { mkdir($to_rel); }
+        
+        //
+        $from_rel = $from.'/'.$rel;
+        
+        //
+        $files = scandir($from_rel);
+
+        //
+        foreach($files as $file) 
+        {
+            //
+            if (in_array($file, array('.', '..'))) { continue; }
 
             //
-            $relFile = $rel ? $rel.'/'.$file : $file;
+            $file_rel = $rel ? $rel.'/'.$file : $file;
             
             //
-            $srcFile = realpath($src.'/'.$relFile);
+            $from_file_rel = realpath($from.'/'.$file_rel);
 
             //
-            if (is_array($exlcude) && in_array($srcFile, $exlcude)) {
+            if (is_array($exlcude) && in_array($from_file_rel, $exlcude))
+            {
+                //
                 continue;
             }
 
             //
-            if (is_dir($srcFile)) {
-
+            if (is_dir($from_file_rel))
+            {
                 //
-                static::copyFolder($src, $dir, $relFile, $exlcude);
+                $this->copyDir($from, $to, $file_rel, $exlcude);
             }
 
-            else {
+            //
+            else
+            {
+                //
+                $to_file_rel = $to.'/'.$file_rel;
 
                 //
-                $dirFile = $dir.'/'.$relFile;
-
-                if (!file_exists($dirFile)) {
-
-                    //
-                    echo "      copy: '{$relFile}'\n";
-
-                    //
-                    copy($srcFile, $dirFile);
-                }
-
-                else {
-
-                    //
-                    $srcTime = filemtime($srcFile);
-
-                    //
-                    $dirTime = filemtime($dirFile);
-
-                    //
-                    if ($srcTime > $dirTime) {
-
-                        //
-                        echo "      copy: '{$relFile}'\n";
-
-                        //
-                        copy($srcFile, $dirFile);
-                    }
-                }
+                $this->copyFile($file_rel, $from_file_rel, $to_file_rel);
             }            
         }
     }
 
     /**
+     * 
+     * 
+     */
+    private function copyFile($file_rel, $from_file_rel, $to_file_rel)
+    {
+        //
+        if (!file_exists($to_file_rel)) 
+        {
+            //
+            echo "    copy: {$file_rel}\n";
+
+            //
+            copy($from_file_rel, $to_file_rel);
+        }
+
+        //
+        else     
+        {
+            //
+            $srcTime = filemtime($from_file_rel);
+
+            //
+            $dirTime = filemtime($to_file_rel);
+
+            //
+            if ($srcTime > $dirTime) 
+            {
+                //
+                echo "    copy: {$file_rel}\n";
+
+                //
+                copy($from_file_rel, $to_file_rel);
+            }
+        }
+    }
+    
+    
+    /**
      *
      * @param type $str
      * @return type
      */
-    public static function fix($str)
+    private function fixstr($str)
     {
         //
         return strlen($str) > 61 ? '...'.substr($str, -61) : $str;
@@ -238,7 +310,24 @@ class Copycode
      */
     private function syntaxError()
     {
-        echo "  Syntax error.";
-        exit();
+        //
+        echo
+        "\n".
+        "  Syntax error.\n".
+        "  Type: copycode --help".
+        "\n\n";
+    }
+    
+    /**
+     * 
+     * 
+     */
+    private function error($msg)
+    {
+        //
+        echo
+        "\n".
+        "  (?) {$msg}\n".
+        "\n";
     }
 }
