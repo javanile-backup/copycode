@@ -30,18 +30,15 @@ class Copycode
     {
         //
         if (!isset($argv[1])) { $this->syntaxError(); exit(); }
-        
+       
         //
-        $taskname = $argv[1];
-        
-        //
-        switch ($taskname)
+        switch ($argv[1])
         {
             //
             case '--version': 
                 echo
                 "\n".
-                "  Copycoder v0.0.6\n".
+                "  Copycoder v0.0.7\n".
                 "  by Francesco Bianco <bianco@javanile.org>\n".
                 "\n";
                 return;
@@ -50,20 +47,30 @@ class Copycode
             case '--help':
                 echo
                 "\n".
-                "  Copycode usage:\n\n".
-                "  |\n".
-                "  |  copycode <task-name>       run copy task by <task-name>\n".
-                "  |                             defined into copycode.json file\n".
-                "  |                             placed in current path.\n".
-                "  |\n".
-                "  |  copycode --list            show the list of tasks.\n".
-                "  |\n".
-                "  |  copycode --help            show the this manuals.\n".
-                "  |\n".
-                "  |  copycode --version         show credits and version.\n".
-                "  |\n\n";
+                "  COPYCODE USAGE\n".
+                "  --------------\n\n".
+                "  copycode <task-name>       run copy task by <task-name>\n".
+                "                             defined into copycode.json file\n".
+                "                             placed in current path.\n".
+                "\n".
+                "  copycode --touch           create copycode.json file if not exists.\n".
+                "\n".
+                "  copycode --list            show the list of tasks.\n".
+                "\n".
+                "  copycode --help            show this shortest guide.\n".
+                "\n".
+                "  copycode --version         show credits and version.\n";
                 return;
+                
+            //
+            case '--list': $this->listTasks(); return;
+            
+            //
+            case '--touch': $this->touch(); return;
         }
+        
+        //
+        $taskname = implode(' ', array_splice($argv, 1));
         
         //
         if (!$this->file_exists()) 
@@ -98,7 +105,7 @@ class Copycode
         }
         
         //
-        echo "  (!) Task complete.\n\n";
+        echo "  (!) Task complete.\n";
     }
     
     /**
@@ -292,6 +299,78 @@ class Copycode
         }
     }
     
+    /**
+     * 
+     * 
+     */
+    private function listTasks()
+    {
+        //
+        if (!$this->file_exists()) 
+        {
+            $this->error('copycode.json file not found.'); exit();
+        }
+
+        //
+        $this->file_decode();
+
+        //
+        if (!$this->json || !is_array($this->json)) 
+        { 
+            $this->error("file copycode.json corrupted."); exit();   
+        }
+        
+        //
+        foreach ($this->json as $taskname => $task)
+        {
+            //
+            echo
+            "\n".
+            "  task: {$taskname}\n".
+            "  ".str_repeat('-', strlen($taskname) + 6)."\n";
+            
+            //
+            if (isset($task['name'])) { echo "  ".$task['name']."\n"; }
+            if (isset($task['description'])) { echo "  ".$task['description']."\n"; }
+            
+            //
+            //echo "\n";
+        }
+    }
+    
+    /**
+     * 
+     * 
+     */
+    private function touch()
+    {
+        //
+        if ($this->file_exists()) 
+        {
+            $this->error('No touch, copycode.json file already exists.'); exit();
+        }
+        
+        //
+        $json = '{
+    "task name": 
+    {           
+        "name"        : "",
+        "description" : "",
+        "from"        : "",
+        "to"          : "",
+        "exclude"     : []
+    }
+}';
+        
+        //
+        if (!file_put_contents($this->file, $json))
+        {
+            
+        }
+
+        //
+        echo "  copycode.json file ready!";
+    }
     
     /**
      *
