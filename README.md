@@ -7,7 +7,7 @@ Copycode able you to copy part of your code project to another place, usefull to
 Install me via composer
 
 ```bash
-# composer global require javanile/copycode
+composer global require javanile/copycode
 ```
 
 ## copycode.json struct
