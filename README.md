@@ -2,6 +2,16 @@
 
 Copycode able you to copy part of your code project to another place, usefull to update local copy or multiple projects at one time or share file and automatize it delivery (only into local machine).
 
+## How intall
+
+Install me via composer
+
+```bash
+# composer global require javanile/copycode
+```
+
+## copycode.json struct
+
 ```json
 {
     "single-task": 
