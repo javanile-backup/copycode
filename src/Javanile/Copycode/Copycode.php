@@ -22,23 +22,35 @@ namespace Javanile\Copycode;
 class Copycode
 {
     /**
-     * @var type
+     * copycode.json file name. 
+     * 
+     * @var string
      */
     private $file = './copycode.json';
 
-
+    /**
+     * loaded content of copycode.json file.
+     * 
+     * @var array
+     */
     private $json = [];
 
+    /**
+     * Command-line entry point for application.
+     * 
+     * @param type $argv Command-line arguments passed via script
+     */
     public function cli($argv)
     {
-        //
+        // no argument passed
         if (!isset($argv[1])) {
             $this->syntaxError();
             exit();
         }
 
-        //
+        // switch opportune command
         switch ($argv[1]) {
+            
             //
             case '--version':
                 echo
@@ -46,8 +58,8 @@ class Copycode
                 "  Copycoder v0.0.7\n".
                 "  by Francesco Bianco <bianco@javanile.org>\n".
                 "\n";
-
-                return;
+                exit();
+                break;
 
             //
             case '--help':
@@ -66,33 +78,35 @@ class Copycode
                 "  copycode --help            show this shortest guide.\n".
                 "\n".
                 "  copycode --version         show credits and version.\n";
-
-                return;
-
-            //
-            case '--list': $this->listTasks();
-
-return;
+                exit();
+                break;
 
             //
-            case '--touch': $this->touch();
+            case '--list': 
+                $this->listTasks(); 
+                exit(); 
+                break;
 
-return;
+            //
+            case '--touch': 
+                $this->touch(); 
+                exit(); 
+                break;
         }
 
-        //
+        // compound taskname for key-read for json file
         $taskname = implode(' ', array_splice($argv, 1));
 
-        //
+        // check if file exits
         if (!$this->file_exists()) {
             $this->error('copycode.json file not found.');
             exit();
         }
 
-        //
+        // parse conted and decode into $this->json
         $this->file_decode();
 
-        //
+        // no taskname found into file
         if (!isset($this->json[$taskname])) {
             $this->error("task '".$taskname."' not found in copycode.json.");
             exit();
@@ -112,7 +126,7 @@ return;
             }
         }
 
-        //
+        // well done
         echo "  (!) Task complete.\n";
     }
 
@@ -123,16 +137,26 @@ return;
      */
     private function file_exists()
     {
-        //
+        // use php native function
         return file_exists($this->file);
     }
 
+    /**
+     * 
+     * 
+     */
     private function file_decode()
     {
-        //
+        // use php native functions
         $this->json = json_decode(file_get_contents($this->file), true);
     }
-
+    
+    /**
+     * Run task also copy/sync activity.
+     * 
+     * @param string $task
+     * @return type
+     */
     private function runTask($task)
     {
         //
