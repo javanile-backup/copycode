@@ -141,7 +141,6 @@ class Copycode
         return file_exists($this->file);
     }
 
-
     private function file_decode()
     {
         // use php native functions
@@ -282,9 +281,8 @@ class Copycode
             }
         }
     }
-    
+
     /**
-     * 
      * @return type
      */
     private function copyFile($file_rel, $from_file_rel, $to_file_rel)
@@ -318,8 +316,6 @@ class Copycode
     }
 
     /**
-     * 
-     * 
      * @return
      */
     private function listTasks()
@@ -367,7 +363,6 @@ class Copycode
     }
 
     /**
-     * 
      * @return type
      */
     private function touch()
@@ -392,10 +387,10 @@ class Copycode
 
         //
         if (!file_put_contents($this->file, $json)) {
-        
+
             //
             $this->error('Error to write copycode.json file.');
-            
+
             //
             exit();
         }
@@ -416,7 +411,6 @@ class Copycode
     }
 
     /**
-     * 
      * @return type
      */
     private function syntaxError()
@@ -427,7 +421,6 @@ class Copycode
     }
 
     /**
-     * 
      * @return type
      */
     private function error($msg)
