@@ -282,7 +282,11 @@ class Copycode
             }
         }
     }
-
+    
+    /**
+     * 
+     * @return type
+     */
     private function copyFile($file_rel, $from_file_rel, $to_file_rel)
     {
         //
@@ -313,6 +317,11 @@ class Copycode
         }
     }
 
+    /**
+     * 
+     * 
+     * @return
+     */
     private function listTasks()
     {
         //
@@ -357,6 +366,10 @@ class Copycode
         }
     }
 
+    /**
+     * 
+     * @return type
+     */
     private function touch()
     {
         //
@@ -379,6 +392,12 @@ class Copycode
 
         //
         if (!file_put_contents($this->file, $json)) {
+        
+            //
+            $this->error('Error to write copycode.json file.');
+            
+            //
+            exit();
         }
 
         //
@@ -396,20 +415,24 @@ class Copycode
         return strlen($str) > 61 ? '...'.substr($str, -61) : $str;
     }
 
+    /**
+     * 
+     * @return type
+     */
     private function syntaxError()
     {
         //
-        echo
-        "\n".
-        "  Syntax error.\n".
+        echo "\n  Syntax error.\n".
         "  Type: copycode --help\n";
     }
 
+    /**
+     * 
+     * @return type
+     */
     private function error($msg)
     {
         //
-        echo
-        "\n".
-        "  (?) {$msg}\n";
+        echo "\n  (?) {$msg}\n";
     }
 }
