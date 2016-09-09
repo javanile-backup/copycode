@@ -1,7 +1,7 @@
-# Copycode
+# Copycode [![StyleCI](https://styleci.io/repos/47252923/shield)](https://styleci.io/repos/47252923)
 
 Copycode able you to copy part of your code project to another place, usefull to update local copy or multiple projects at one time or share file and automatize it delivery or backup your files (only into local machine).
-[![StyleCI](https://styleci.io/repos/47252923/shield)](https://styleci.io/repos/47252923)
+
 
 ## How install
 
