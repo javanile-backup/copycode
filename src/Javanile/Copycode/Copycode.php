@@ -22,22 +22,22 @@ namespace Javanile\Copycode;
 class Copycode
 {
     /**
-     * copycode.json file name. 
-     * 
+     * copycode.json file name.
+     *
      * @var string
      */
     private $file = './copycode.json';
 
     /**
      * loaded content of copycode.json file.
-     * 
+     *
      * @var array
      */
     private $json = [];
 
     /**
      * Command-line entry point for application.
-     * 
+     *
      * @param type $argv Command-line arguments passed via script
      */
     public function cli($argv)
@@ -50,7 +50,7 @@ class Copycode
 
         // switch opportune command
         switch ($argv[1]) {
-            
+
             //
             case '--version':
                 echo
@@ -82,15 +82,15 @@ class Copycode
                 break;
 
             //
-            case '--list': 
-                $this->listTasks(); 
-                exit(); 
+            case '--list':
+                $this->listTasks();
+                exit();
                 break;
 
             //
-            case '--touch': 
-                $this->touch(); 
-                exit(); 
+            case '--touch':
+                $this->touch();
+                exit();
                 break;
         }
 
@@ -141,20 +141,18 @@ class Copycode
         return file_exists($this->file);
     }
 
-    /**
-     * 
-     * 
-     */
+
     private function file_decode()
     {
         // use php native functions
         $this->json = json_decode(file_get_contents($this->file), true);
     }
-    
+
     /**
      * Run task also copy/sync activity.
-     * 
+     *
      * @param string $task
+     *
      * @return type
      */
     private function runTask($task)
@@ -247,7 +245,7 @@ class Copycode
 
         //
         foreach ($files as $file) {
-            
+
             //
             if (in_array($file, ['.', '..'])) {
                 continue;
@@ -261,21 +259,21 @@ class Copycode
 
             //
             if (is_array($exlcude) && in_array($from_file_rel, $exlcude)) {
-                
+
                 //
                 continue;
             }
 
             //
             if (is_dir($from_file_rel)) {
-                
+
                 //
                 $this->copyDir($from, $to, $file_rel, $exlcude);
             }
 
             //
             else {
-                
+
                 //
                 $to_file_rel = $to.'/'.$file_rel;
 
@@ -337,23 +335,23 @@ class Copycode
         "\n".
         "  COPYCODE LIST\n".
         "  -------------\n\n";
-        
+
         //
         foreach ($this->json as $taskname => $task) {
-            
+
             //
-            echo "  copycode ".str_pad($taskname, 20, ' ');
-            
+            echo '  copycode '.str_pad($taskname, 20, ' ');
+
             //
             if (isset($task['name'])) {
                 echo $task['name'];
             }
-            
+
             //
-            else if (isset($task['description'])) {
+            elseif (isset($task['description'])) {
                 echo $task['description'];
             }
-            
+
             //
             echo "\n";
         }
