@@ -226,6 +226,14 @@ class Copycode
         echo "\n";
     }
 
+    /**
+     * Copy file of a directory recursively.
+     * 
+     * @param type $from
+     * @param type $to
+     * @param type $rel
+     * @param type $exlcude
+     */
     private function copyDir($from, $to, $rel, $exlcude)
     {
         // destionation folder to copy file
