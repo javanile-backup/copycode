@@ -1,21 +1,22 @@
 <?php
 
 /*\
- * 
+ *
  * This file is part of Copycode.
  *
  * (c) Francesco Bianco <bianco@javanile.org>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- * 
+ *
 \*/
 
 //
+
 namespace Javanile\Copycode;
 
 /**
- * Abstract base class for constraints. 
+ * Abstract base class for constraints.
  * which are placed upon any value.
  *
  * @author Francesco Bianco <bianco@javanile.org>
@@ -29,7 +30,6 @@ class Copycode
 
 
     private $json = [];
-
 
     public function cli($argv)
     {
@@ -117,25 +117,23 @@ return;
         //
         echo "  (!) Task complete.\n";
     }
-    
+
     /**
      * Check if copycode.json file exists.
-     * 
-     * @return boolean True if file exists
+     *
+     * @return bool True if file exists
      */
-    private function file_exists() 
+    private function file_exists()
     {
         //
         return file_exists($this->file);
     }
-
 
     private function file_decode()
     {
         //
         $this->json = json_decode(file_get_contents($this->file), true);
     }
-
 
     private function runTask($task)
     {
@@ -209,7 +207,6 @@ return;
         echo "\n";
     }
 
-
     private function copyDir($from, $to, $rel, $exlcude)
     {
         // destionation folder to copy file
@@ -262,7 +259,6 @@ return;
         }
     }
 
-
     private function copyFile($file_rel, $from_file_rel, $to_file_rel)
     {
         //
@@ -292,7 +288,6 @@ return;
             }
         }
     }
-
 
     private function listTasks()
     {
@@ -331,7 +326,6 @@ return;
             //echo "\n";
         }
     }
-
 
     private function touch()
     {
@@ -372,7 +366,6 @@ return;
         return strlen($str) > 61 ? '...'.substr($str, -61) : $str;
     }
 
-
     private function syntaxError()
     {
         //
@@ -381,7 +374,6 @@ return;
         "  Syntax error.\n".
         "  Type: copycode --help\n";
     }
-
 
     private function error($msg)
     {
