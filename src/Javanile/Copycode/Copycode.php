@@ -1,11 +1,25 @@
 <?php
 
+/*\
+ * 
+ * This file is part of Copycode.
+ *
+ * (c) Francesco Bianco <bianco@javanile.org>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ * 
+\*/
 
 //
-
 namespace Javanile\Copycode;
 
-//
+/**
+ * Abstract base class for constraints. 
+ * which are placed upon any value.
+ *
+ * @author Francesco Bianco <bianco@javanile.org>
+ */
 class Copycode
 {
     /**
@@ -103,9 +117,13 @@ return;
         //
         echo "  (!) Task complete.\n";
     }
-
-
-    private function file_exists()
+    
+    /**
+     * Check if copycode.json file exists.
+     * 
+     * @return boolean True if file exists
+     */
+    private function file_exists() 
     {
         //
         return file_exists($this->file);
