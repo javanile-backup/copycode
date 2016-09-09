@@ -65,8 +65,8 @@ class Copycode
             case '--help':
                 echo
                 "\n".
-                "  COPYCODE USAGE\n".
-                "  --------------\n\n".
+                "  COPYCODE HELP\n".
+                "  -------------\n\n".
                 "  copycode <task-name>       run copy task by <task-name>\n".
                 "                             defined into copycode.json file\n".
                 "                             placed in current path.\n".
@@ -247,6 +247,7 @@ class Copycode
 
         //
         foreach ($files as $file) {
+            
             //
             if (in_array($file, ['.', '..'])) {
                 continue;
@@ -260,18 +261,21 @@ class Copycode
 
             //
             if (is_array($exlcude) && in_array($from_file_rel, $exlcude)) {
+                
                 //
                 continue;
             }
 
             //
             if (is_dir($from_file_rel)) {
+                
                 //
                 $this->copyDir($from, $to, $file_rel, $exlcude);
             }
 
             //
             else {
+                
                 //
                 $to_file_rel = $to.'/'.$file_rel;
 
@@ -329,23 +333,29 @@ class Copycode
         }
 
         //
+        echo
+        "\n".
+        "  COPYCODE LIST\n".
+        "  -------------\n\n";
+        
+        //
         foreach ($this->json as $taskname => $task) {
+            
             //
-            echo
-            "\n".
-            "  task: {$taskname}\n".
-            '  '.str_repeat('-', strlen($taskname) + 6)."\n";
-
+            echo "  copycode ".str_pad($taskname, 20, ' ');
+            
             //
             if (isset($task['name'])) {
-                echo '  '.$task['name']."\n";
+                echo $task['name'];
             }
-            if (isset($task['description'])) {
-                echo '  '.$task['description']."\n";
-            }
-
+            
             //
-            //echo "\n";
+            else if (isset($task['description'])) {
+                echo $task['description'];
+            }
+            
+            //
+            echo "\n";
         }
     }
 
