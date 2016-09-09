@@ -11,7 +11,6 @@
  *
 \*/
 
-//
 
 namespace Javanile\Copycode;
 
